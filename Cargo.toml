@@ -1,123 +1,48 @@
 [package]
-name = "tauri-mobile"
-version = "0.3.0"
-authors = [
-  "Tauri Programme within The Commons Conservancy",
-  "Brainium Studios LLC",
-  "Francesca Lovebloom <francesca@brainiumstudios.com>"
-]
+name = "tauri-mobi"
+version = "0.1.0"
+authors = ["InmediaGR <inmediagreece@gmail.com>"]
 edition = "2018"
-description = "Rust on mobile made easy!"
-documentation = "https://docs.rs/tauri-mobile"
-repository = "https://github.com/tauri-apps/tauri-mobile"
-readme = "README.md"
-keywords = [ "cargo", "mobile", "ios", "android", "tauri" ]
-categories = [ "development-tools::cargo-plugins" ]
-license = "Apache-2.0 OR MIT"
+
+[lib]
+crate-type = ["staticlib", "cdylib", "rlib"]
 
 [[bin]]
-name = "cargo-mobile"
-required-features = [ "cli" ]
+name = "tauri-mobi-desktop"
+path = "gen/bin/desktop.rs"
 
-[[bin]]
-name = "cargo-apple"
-required-features = [ "cli" ]
-
-[[bin]]
-name = "cargo-android"
-required-features = [ "cli" ]
-
-[features]
-cli = [
-  "hit",
-  "home",
-  "dunce",
-  "handlebars",
-  "log",
-  "serde",
-  "serde_json",
-  "thiserror",
-  "structopt",
-  "env_logger"
+[package.metadata.cargo-android]
+app-activity-name = ".MainActivity"
+app-dependencies = [
+    "androidx.webkit:webkit:1.4.0",
+    "androidx.appcompat:appcompat:1.5.0",
+    "com.google.android.material:material:1.6.1",
 ]
-brainium = [ ]
-openssl-vendored = [ "openssl/vendored" ]
-default = [ "cli" ]
+project-dependencies = [ "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10" ]
+app-plugins = [ "org.jetbrains.kotlin.android" ]
+app-permissions = [ "android.permission.INTERNET" ]
+app-theme-parent = "Theme.MaterialComponents.DayNight.DarkActionBar"
+
+[package.metadata.cargo-android.env-vars]
+WRY_ANDROID_PACKAGE = "com.example.tauri_mobi"
+WRY_ANDROID_LIBRARY = "tauri_mobi"
+WRY_ANDROID_KOTLIN_FILES_OUT_DIR = "<android-project-dir>/app/src/main/kotlin/com/example"
+
+[package.metadata.cargo-apple.ios]
+frameworks = [ "WebKit" ]
 
 [dependencies]
-handlebars = "3.3.0"
-serde_json = "1.0.57"
-colored = "1.9.3"
-deunicode = "1.1.1"
-dunce = "1.0.2"
-english-numbers = "0.3.3"
-env_logger = { version = "0.7.1", optional = true }
-heck = "0.4.0"
-home = "0.5.3"
-ignore = "0.4.16"
-indexmap = "1.3.2"
-java-properties = { version = "1.2.0" }
-log = "0.4.8"
-once-cell-regex = "0.2.1"
-path_abs = "0.5.0"
-serde = { version = "1.0.105", features = [ "derive" ] }
-structopt = { version = "0.3.12", optional = true }
-textwrap = { version = "0.11.0", features = [ "term_size" ] }
-thiserror = "1.0.20"
-toml = { version = "0.5.6", features = [ "preserve_order" ] }
-os_pipe = "1"
-duct = "0.13"
-which = "4.4.0"
+anyhow = "1.0.56"
+log = "0.4.11"
+wry = "0.28.0"
 
-[dev-dependencies]
-rstest = "0.12"
-simple_logger = "1.11.0"
+[target.'cfg(target_os = "android")'.dependencies]
+android_logger = "0.9.0"
+jni = "0.19.0"
+paste = "1.0"
 
-[target."cfg(target_os = \"macos\")".dependencies]
-cocoa = "0.20.0"
-core-foundation = "0.7.0"
-openssl = "0.10.28"
-objc = "0.2.7"
-objc_id = "0.1.1"
+[target.'cfg(not(target_os = "android"))'.dependencies]
+env_logger = "0.9.0"
 
-[target."cfg(not(target_os = \"macos\"))".dependencies]
-ureq = "2.4.0"
-
-[target."cfg(target_os = \"linux\")".dependencies]
-freedesktop_entry_parser = "1.1"
-lexical-core = "0.7.6"
-
-[target."cfg(unix)".dependencies]
-libc = "0.2.81"
-
-[target."cfg(windows)".dependencies]
-winapi = { version = "0.3.9", features = [ "winbase" ] }
-
-  [target."cfg(windows)".dependencies.windows]
-  version = "0.39.0"
-  features = [
-  "Win32_Foundation",
-  "Win32_Security",
-  "Win32_Storage_FileSystem",
-  "Win32_System_Diagnostics_Debug",
-  "Win32_System_IO",
-  "Win32_System_Ioctl",
-  "Win32_System_Memory",
-  "Win32_System_Registry",
-  "Win32_System_SystemInformation",
-  "Win32_System_SystemServices",
-  "Win32_UI_Shell"
-]
-
-[target."cfg(windows)".build-dependencies]
-embed-resource = "1.6.4"
-
-[build-dependencies]
-hit = { version = "0.2.0", optional = true }
-home = { version = "0.5.3", optional = true }
-dunce = { version = "1.0.2", optional = true }
-handlebars = { version = "3.3.0", optional = true }
-log = { version = "0.4.11", optional = true }
-serde = { version = "1.0.114", optional = true }
-serde_json = { version = "1.0.57", optional = true }
-thiserror = { version = "1.0.20", optional = true }
+[target.'cfg(target_os = "ios")'.dependencies]
+core-foundation = "0.9.3"

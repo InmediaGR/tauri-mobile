@@ -1,0 +1,5 @@
+[app]
+name = "tauri-mobi"
+stylized-name = "Tauri Mobi"
+domain = "example.com"
+template-pack = "wry"

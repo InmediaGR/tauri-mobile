@@ -1,3 +1,10 @@
-/target
+# Rust
+target/
 **/*.rs.bk
+
+# tauri-mobile
+.cargo/
+/gen
+
+# macOS
 .DS_Store
